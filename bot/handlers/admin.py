@@ -11,12 +11,16 @@ from aiogram.fsm.state import State, StatesGroup
 import os
 import json
 
-from ..database import (
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from database import (
     get_user, get_users_by_role, get_pending_orders, get_order,
     update_order_status, assign_courier, get_categories, get_menu_items,
     add_menu_item, delete_menu_item, export_menu_json, import_menu_json
 )
-from ..keyboards import (
+from keyboards import (
     get_admin_panel_keyboard, get_order_manage_keyboard,
     get_menu_edit_keyboard, get_category_select_keyboard,
     get_menu_items_keyboard
@@ -186,12 +190,41 @@ async def admin_change_status_callback(callback: CallbackQuery, bot: Bot):
     
     update_order_status(order_id, new_status)
     
+    # Формируем детальное уведомление для клиента
+    notification_messages = {
+        'confirmed': (
+            f"✅ <b>Заказ #{order_id} подтверждён!</b>\n\n"
+            f"Мы начали готовить ваш заказ.\n"
+            f"Ожидайте уведомление о готовности!"
+        ),
+        'cooking': (
+            f"👨‍🍳 <b>Заказ #{order_id} готовится!</b>\n\n"
+            f"Наши повара уже работают над вашим заказом.\n"
+            f"Скоро будет готов!"
+        ),
+        'ready': (
+            f"📦 <b>Заказ #{order_id} готов!</b>\n\n"
+            f"Ваш заказ готов и ожидает курьера.\n"
+            f"Скоро он отправится к вам!"
+        ),
+        'cancelled': (
+            f"❌ <b>Заказ #{order_id} отменён</b>\n\n"
+            f"К сожалению, ваш заказ был отменён.\n"
+            f"Если у вас есть вопросы, свяжитесь с нами."
+        ),
+    }
+    
+    notification_text = notification_messages.get(
+        new_status,
+        f"📦 Статус заказа #{order_id} изменён:\n{STATUS_NAMES.get(new_status, new_status)}"
+    )
+    
     # Notify user about status change
     try:
         await bot.send_message(
             order['user_id'],
-            f"📦 Статус заказа #{order_id} изменён:\n"
-            f"{STATUS_NAMES.get(new_status, new_status)}"
+            notification_text,
+            parse_mode="HTML"
         )
     except Exception as e:
         print(f"Failed to notify user: {e}")
@@ -237,6 +270,21 @@ async def admin_assign_courier_callback(callback: CallbackQuery, bot: Bot):
     assign_courier(order_id, courier_id)
     
     order = get_order(order_id)
+    courier = get_user(courier_id)
+    courier_name = courier.get('first_name', 'Курьер') if courier else 'Курьер'
+    
+    # Notify customer about courier assignment
+    try:
+        await bot.send_message(
+            order['user_id'],
+            f"🚚 <b>Курьер назначен на ваш заказ #{order_id}!</b>\n\n"
+            f"👤 Курьер: {courier_name}\n"
+            f"📍 Адрес доставки: {order['delivery_address']}\n\n"
+            f"Курьер скоро заберёт ваш заказ и отправится к вам!",
+            parse_mode="HTML"
+        )
+    except Exception as e:
+        print(f"Failed to notify customer about courier: {e}")
     
     # Notify courier
     try:
@@ -502,7 +550,7 @@ async def admin_stats_callback(callback: CallbackQuery):
         await callback.answer("⛔ Нет доступа", show_alert=True)
         return
     
-    from ..database import get_connection
+    from database import get_connection
     
     with get_connection() as conn:
         cursor = conn.cursor()

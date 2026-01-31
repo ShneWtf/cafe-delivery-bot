@@ -21,7 +21,7 @@ def get_webapp_url() -> str:
 # ============ USER KEYBOARDS ============
 
 def get_main_menu_keyboard() -> ReplyKeyboardMarkup:
-    """Main menu keyboard with Web App button"""
+    """Main menu keyboard with Web App button for regular users"""
     webapp_url = get_webapp_url()
     
     keyboard = ReplyKeyboardMarkup(
@@ -34,6 +34,60 @@ def get_main_menu_keyboard() -> ReplyKeyboardMarkup:
         is_persistent=True
     )
     return keyboard
+
+
+def get_director_menu_keyboard() -> ReplyKeyboardMarkup:
+    """Menu keyboard for director - staff management only"""
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="👑 Панель директора")],
+            [KeyboardButton(text="🛠 Админ-панель"), KeyboardButton(text="📋 Заказы")],
+            [KeyboardButton(text="👥 Управление ролями"), KeyboardButton(text="📊 Статистика")],
+        ],
+        resize_keyboard=True,
+        is_persistent=True
+    )
+    return keyboard
+
+
+def get_admin_menu_keyboard() -> ReplyKeyboardMarkup:
+    """Menu keyboard for admin - order and menu management"""
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="🛠 Админ-панель")],
+            [KeyboardButton(text="📋 Заказы"), KeyboardButton(text="🍽 Редактировать меню")],
+            [KeyboardButton(text="📊 Статистика"), KeyboardButton(text="👤 Профиль")],
+        ],
+        resize_keyboard=True,
+        is_persistent=True
+    )
+    return keyboard
+
+
+def get_courier_menu_keyboard() -> ReplyKeyboardMarkup:
+    """Menu keyboard for courier - delivery management only"""
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="🚚 Мои доставки")],
+            [KeyboardButton(text="📍 Активные заказы"), KeyboardButton(text="✅ Завершённые")],
+            [KeyboardButton(text="👤 Профиль")],
+        ],
+        resize_keyboard=True,
+        is_persistent=True
+    )
+    return keyboard
+
+
+def get_keyboard_by_role(role: str) -> ReplyKeyboardMarkup:
+    """Get appropriate keyboard based on user role"""
+    if role == 'director':
+        return get_director_menu_keyboard()
+    elif role == 'admin':
+        return get_admin_menu_keyboard()
+    elif role == 'courier':
+        return get_courier_menu_keyboard()
+    else:
+        return get_main_menu_keyboard()
 
 
 def get_share_phone_keyboard() -> ReplyKeyboardMarkup:
@@ -92,11 +146,74 @@ def get_director_panel_keyboard() -> InlineKeyboardMarkup:
     """Director control panel"""
     builder = InlineKeyboardBuilder()
     
+    # Управление персоналом
+    builder.button(text="👥 Управление персоналом", callback_data="director:staff_menu")
+    # Управление меню
+    builder.button(text="🍽 Управление меню", callback_data="director:menu_management")
+    # Заказы
+    builder.button(text="📋 Все заказы", callback_data="director:all_orders")
+    # Статистика
+    builder.button(text="📊 Статистика", callback_data="director:stats")
+    builder.button(text="🔙 Закрыть", callback_data="director:close")
+    
+    builder.adjust(2, 2, 1)
+    return builder.as_markup()
+
+
+def get_director_staff_keyboard() -> InlineKeyboardMarkup:
+    """Director staff management submenu"""
+    builder = InlineKeyboardBuilder()
+    
     builder.button(text="➕ Добавить админа", callback_data="director:add_admin")
     builder.button(text="➕ Добавить курьера", callback_data="director:add_courier")
     builder.button(text="❌ Удалить роль", callback_data="director:remove_role")
     builder.button(text="📋 Список ролей", callback_data="director:list_roles")
-    builder.button(text="🔙 Закрыть", callback_data="director:close")
+    builder.button(text="🔙 Назад", callback_data="director:back")
+    
+    builder.adjust(2, 2, 1)
+    return builder.as_markup()
+
+
+def get_director_menu_management_keyboard() -> InlineKeyboardMarkup:
+    """Director menu management submenu"""
+    builder = InlineKeyboardBuilder()
+    
+    builder.button(text="➕ Добавить блюдо", callback_data="director:add_dish")
+    builder.button(text="✏️ Изменить блюдо", callback_data="director:edit_dish")
+    builder.button(text="❌ Удалить блюдо", callback_data="director:delete_dish")
+    builder.button(text="📋 Список блюд", callback_data="director:list_dishes")
+    builder.button(text="🔙 Назад", callback_data="director:back")
+    
+    builder.adjust(2, 2, 1)
+    return builder.as_markup()
+
+
+def get_dish_list_keyboard(items: List[Dict], action: str = "edit") -> InlineKeyboardMarkup:
+    """List dishes for director management"""
+    builder = InlineKeyboardBuilder()
+    
+    for item in items[:15]:
+        status = "✅" if item.get('is_available', 1) else "❌"
+        builder.button(
+            text=f"{status} {item['name']} - {item['price']}₽",
+            callback_data=f"director:{action}_dish_id:{item['id']}"
+        )
+    
+    builder.button(text="🔙 Назад", callback_data="director:menu_management")
+    builder.adjust(1)
+    
+    return builder.as_markup()
+
+
+def get_dish_edit_keyboard(item_id: int) -> InlineKeyboardMarkup:
+    """Dish edit options"""
+    builder = InlineKeyboardBuilder()
+    
+    builder.button(text="📝 Изменить название", callback_data=f"director:edit_name:{item_id}")
+    builder.button(text="💰 Изменить цену", callback_data=f"director:edit_price:{item_id}")
+    builder.button(text="📄 Изменить описание", callback_data=f"director:edit_desc:{item_id}")
+    builder.button(text="🔄 Вкл/Выкл доступность", callback_data=f"director:toggle_avail:{item_id}")
+    builder.button(text="🔙 Назад", callback_data="director:edit_dish")
     
     builder.adjust(2, 2, 1)
     return builder.as_markup()

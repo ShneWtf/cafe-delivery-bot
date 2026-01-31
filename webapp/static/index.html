@@ -3,29 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Кафе Доставка</title>
+    <title>Кофейня Lilit</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /*
+         * ====================================================
+         * КОФЕЙНЯ LILIT - MINI APP
+         * ====================================================
+         * Цветовая схема: спокойные бежевые/кремовые оттенки
+         * ====================================================
+         */
+        
         :root {
-            --tg-theme-bg-color: #ffffff;
-            --tg-theme-text-color: #1a1a2e;
-            --tg-theme-hint-color: #7f8c8d;
-            --tg-theme-link-color: #e94560;
-            --tg-theme-button-color: #e94560;
-            --tg-theme-button-text-color: #ffffff;
-            --tg-theme-secondary-bg-color: #f8f9fa;
+            /* Основные цвета - спокойная бежевая палитра */
+            --bg-primary: #FDF8F3;          /* Светлый кремовый фон */
+            --bg-secondary: #F5EDE4;        /* Вторичный бежевый */
+            --bg-card: #FFFFFF;             /* Белый для карточек */
             
-            --accent: #e94560;
-            --accent-dark: #c73e54;
-            --accent-light: #ff6b81;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --card-bg: #ffffff;
-            --shadow: 0 4px 20px rgba(233, 69, 96, 0.15);
-            --shadow-hover: 0 8px 30px rgba(233, 69, 96, 0.25);
-            --gradient: linear-gradient(135deg, #e94560 0%, #ff6b81 100%);
-            --gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            /* Текст */
+            --text-primary: #2C2420;        /* Тёмно-коричневый */
+            --text-secondary: #6B5B4F;      /* Коричнево-серый */
+            --text-muted: #9A8B7C;          /* Приглушённый */
+            
+            /* Акценты - тёплые бежевые/шампань */
+            --accent: #C9A86C;              /* Золотисто-бежевый */
+            --accent-dark: #A68B52;         /* Тёмный бежевый */
+            --accent-light: #E5D4B3;        /* Светлый шампань */
+            --accent-hover: #B89856;        /* Hover состояние */
+            
+            /* Состояния */
+            --success: #7D9A6D;             /* Приглушённый зелёный */
+            --warning: #D4A857;             /* Тёплый жёлтый */
+            --error: #C17B6E;               /* Приглушённый красный */
+            
+            /* Тени и эффекты */
+            --shadow-soft: 0 2px 12px rgba(44, 36, 32, 0.08);
+            --shadow-medium: 0 4px 20px rgba(44, 36, 32, 0.12);
+            --shadow-card: 0 2px 8px rgba(44, 36, 32, 0.06);
+            
+            /* Скругления */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
         }
 
         * {
@@ -36,69 +57,109 @@
         }
 
         body {
-            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--gradient-dark);
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
             min-height: 100vh;
-            color: var(--tg-theme-text-color);
-            padding-bottom: 100px;
+            color: var(--text-primary);
+            padding-bottom: 120px;
         }
 
-        /* ===== HEADER ===== */
+        /* ====================================================
+         * HEADER С ЛОГОТИПОМ
+         * ====================================================
+         * Логотип: поместите файл логотипа в папку webapp/static/img/
+         * Назовите файл: logo.png
+         * Рекомендуемый размер: 120x120px или больше (будет масштабирован)
+         * ==================================================== */
         .header {
-            background: var(--gradient);
-            padding: 20px 16px;
-            color: white;
+            background: var(--bg-card);
+            padding: 20px 16px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-light);
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 12px;
+            display: block;
+            object-fit: contain;
+            /* Если логотип не загружен, показываем placeholder */
+        }
+
+        .header-logo-placeholder {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 12px;
+            background: var(--bg-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--accent);
         }
 
         .header h1 {
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .header-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            letter-spacing: 1px;
         }
 
-        /* ===== ADDRESS INPUT ===== */
+        /* ===== ADDRESS SECTION ===== */
         .address-section {
-            background: white;
+            background: var(--bg-card);
             margin: 16px;
-            border-radius: 16px;
+            border-radius: var(--radius-lg);
             padding: 16px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--accent-light);
         }
 
         .address-label {
-            font-size: 12px;
-            color: var(--tg-theme-hint-color);
+            font-size: 11px;
+            color: var(--text-muted);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             margin-bottom: 8px;
         }
 
         .address-input {
             width: 100%;
-            border: 2px solid #eee;
-            border-radius: 12px;
+            border: 1px solid var(--accent-light);
+            border-radius: var(--radius-md);
             padding: 14px 16px;
-            font-size: 16px;
+            font-size: 15px;
             font-family: inherit;
             transition: all 0.3s ease;
-            background: var(--tg-theme-secondary-bg-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
         }
 
         .address-input:focus {
             outline: none;
             border-color: var(--accent);
-            background: white;
+            background: var(--bg-card);
+            box-shadow: 0 0 0 3px rgba(201, 168, 108, 0.15);
+        }
+
+        .address-input::placeholder {
+            color: var(--text-muted);
         }
 
         /* ===== STORIES ===== */
@@ -116,31 +177,33 @@
 
         .story-card {
             display: inline-block;
-            width: 140px;
-            height: 180px;
-            border-radius: 16px;
+            width: 130px;
+            height: 160px;
+            border-radius: var(--radius-lg);
             margin-right: 12px;
             position: relative;
             overflow: hidden;
             vertical-align: top;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow-card);
         }
 
         .story-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-medium);
         }
 
         .story-card.new {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #E8DED4 0%, #D4C4B0 100%);
         }
 
         .story-card.promo {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #E5D4B3 0%, #C9A86C 100%);
         }
 
         .story-card.channel {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #D4C8BC 0%, #A99A8A 100%);
         }
 
         .story-content {
@@ -148,14 +211,14 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 16px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 14px;
+            background: linear-gradient(transparent, rgba(44, 36, 32, 0.6));
             color: white;
         }
 
         .story-title {
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
             line-height: 1.3;
             white-space: normal;
         }
@@ -164,7 +227,7 @@
             position: absolute;
             top: 12px;
             right: 12px;
-            font-size: 28px;
+            font-size: 24px;
         }
 
         /* ===== CATEGORIES ===== */
@@ -182,22 +245,27 @@
 
         .category-tab {
             flex-shrink: 0;
-            padding: 10px 18px;
-            background: white;
-            border-radius: 25px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
             font-size: 14px;
-            font-weight: 600;
-            color: var(--tg-theme-text-color);
+            font-weight: 500;
+            color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--accent-light);
+        }
+
+        .category-tab:hover {
+            background: var(--accent-light);
+            color: var(--text-primary);
         }
 
         .category-tab.active {
-            background: var(--gradient);
+            background: var(--accent);
             color: white;
-            box-shadow: var(--shadow);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-soft);
         }
 
         /* ===== MENU SECTION ===== */
@@ -206,33 +274,42 @@
         }
 
         .category-block {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .category-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: white;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--accent-light);
         }
 
         /* ===== MENU ITEMS ===== */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 14px;
         }
 
         .menu-item {
-            background: white;
-            border-radius: 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-card);
             transition: all 0.3s ease;
             position: relative;
+            border: 1px solid transparent;
+        }
+
+        .menu-item:hover {
+            box-shadow: var(--shadow-medium);
+            border-color: var(--accent-light);
         }
 
         .menu-item:active {
@@ -241,44 +318,51 @@
 
         .item-image {
             width: 100%;
-            height: 100px;
-            background: var(--gradient);
+            height: 110px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--accent-light) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 44px;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .item-new-badge {
             position: absolute;
             top: 8px;
             left: 8px;
-            background: var(--success);
+            background: var(--accent);
             color: white;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             padding: 4px 8px;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .item-content {
-            padding: 12px;
+            padding: 14px;
         }
 
         .item-name {
             font-size: 14px;
-            font-weight: 700;
-            color: var(--tg-theme-text-color);
+            font-weight: 600;
+            color: var(--text-primary);
             margin-bottom: 4px;
             line-height: 1.3;
         }
 
         .item-description {
             font-size: 11px;
-            color: var(--tg-theme-hint-color);
+            color: var(--text-muted);
             line-height: 1.4;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -293,24 +377,28 @@
 
         .item-price {
             font-size: 16px;
-            font-weight: 800;
-            color: var(--accent);
+            font-weight: 700;
+            color: var(--accent-dark);
         }
 
         .add-btn {
             width: 36px;
             height: 36px;
             border: none;
-            background: var(--gradient);
+            background: var(--accent);
             color: white;
-            border-radius: 12px;
+            border-radius: var(--radius-md);
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+        }
+
+        .add-btn:hover {
+            background: var(--accent-hover);
         }
 
         .add-btn:active {
@@ -325,38 +413,44 @@
         .quantity-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .qty-btn {
             width: 28px;
             height: 28px;
             border: none;
-            background: #f0f0f0;
-            color: var(--tg-theme-text-color);
-            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:hover {
+            background: var(--accent-light);
         }
 
         .qty-btn.minus {
-            background: #ffebee;
-            color: #e94560;
+            background: #FAE8E5;
+            color: var(--error);
         }
 
         .qty-btn.plus {
-            background: var(--gradient);
+            background: var(--accent);
             color: white;
         }
 
         .qty-value {
-            font-weight: 700;
-            min-width: 20px;
+            font-weight: 600;
+            min-width: 24px;
             text-align: center;
+            font-size: 14px;
         }
 
         /* ===== CART FOOTER ===== */
@@ -365,12 +459,13 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: white;
+            background: var(--bg-card);
             padding: 16px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 -4px 20px rgba(44, 36, 32, 0.1);
             z-index: 1000;
             transform: translateY(100%);
             transition: transform 0.3s ease;
+            border-top: 1px solid var(--accent-light);
         }
 
         .cart-footer.visible {
@@ -387,45 +482,51 @@
         .cart-info {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .cart-count {
             background: var(--accent);
             color: white;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .cart-label {
-            font-weight: 600;
-            color: var(--tg-theme-hint-color);
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 14px;
         }
 
         .cart-total {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--tg-theme-text-color);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
         .checkout-btn {
             width: 100%;
             padding: 16px;
             border: none;
-            background: var(--gradient);
+            background: var(--accent);
             color: white;
             font-size: 16px;
-            font-weight: 700;
-            border-radius: 14px;
+            font-weight: 600;
+            border-radius: var(--radius-lg);
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-soft);
+            letter-spacing: 0.5px;
+        }
+
+        .checkout-btn:hover {
+            background: var(--accent-hover);
         }
 
         .checkout-btn:active {
@@ -439,11 +540,12 @@
 
         /* ===== BONUS SECTION ===== */
         .bonus-section {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
-            border-radius: 12px;
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CD 100%);
+            border-radius: var(--radius-md);
             padding: 12px;
             margin-bottom: 12px;
             display: none;
+            border: 1px solid var(--warning);
         }
 
         .bonus-section.visible {
@@ -458,15 +560,15 @@
         }
 
         .bonus-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #856404;
+            font-size: 13px;
+            font-weight: 600;
+            color: #7A6420;
         }
 
         .bonus-available {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: #856404;
+            color: #7A6420;
         }
 
         .bonus-input-row {
@@ -477,39 +579,46 @@
         .bonus-input {
             flex: 1;
             padding: 10px 14px;
-            border: 2px solid #ffc107;
-            border-radius: 10px;
-            font-size: 16px;
+            border: 1px solid var(--warning);
+            border-radius: var(--radius-md);
+            font-size: 15px;
             font-family: inherit;
             background: white;
         }
 
         .bonus-apply-btn {
             padding: 10px 20px;
-            background: #ffc107;
+            background: var(--warning);
             border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            color: #856404;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            color: white;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .bonus-apply-btn:hover {
+            background: #C49B4D;
         }
 
         /* ===== LOADING ===== */
         .loading {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px;
-            color: white;
+            padding: 60px;
+            color: var(--text-muted);
         }
 
         .loading-spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top-color: white;
+            border: 3px solid var(--accent-light);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            margin-bottom: 16px;
         }
 
         @keyframes spin {
@@ -519,18 +628,19 @@
         /* ===== TOAST ===== */
         .toast {
             position: fixed;
-            bottom: 120px;
+            bottom: 130px;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(0,0,0,0.9);
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text-primary);
             color: white;
             padding: 12px 24px;
-            border-radius: 25px;
+            border-radius: var(--radius-xl);
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             z-index: 2000;
             opacity: 0;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
         }
 
         .toast.visible {
@@ -542,18 +652,18 @@
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: white;
+            color: var(--text-muted);
         }
 
         .empty-state-icon {
-            font-size: 60px;
+            font-size: 48px;
             margin-bottom: 16px;
+            opacity: 0.6;
         }
 
         .empty-state-text {
-            font-size: 18px;
-            font-weight: 600;
-            opacity: 0.8;
+            font-size: 16px;
+            font-weight: 500;
         }
 
         /* ===== MODAL ===== */
@@ -563,11 +673,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(44, 36, 32, 0.5);
             z-index: 3000;
             display: none;
             align-items: flex-end;
             justify-content: center;
+            backdrop-filter: blur(4px);
         }
 
         .modal-overlay.visible {
@@ -575,10 +686,10 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--bg-card);
             width: 100%;
-            max-height: 90vh;
-            border-radius: 24px 24px 0 0;
+            max-height: 85vh;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
             padding: 24px;
             animation: slideUp 0.3s ease;
         }
@@ -595,16 +706,18 @@
         .modal-handle {
             width: 40px;
             height: 4px;
-            background: #ddd;
+            background: var(--accent-light);
             border-radius: 2px;
             margin: 0 auto 20px;
         }
 
         .modal-title {
-            font-size: 20px;
-            font-weight: 800;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-weight: 600;
             margin-bottom: 20px;
             text-align: center;
+            color: var(--text-primary);
         }
 
         .cart-items-list {
@@ -615,8 +728,8 @@
         .cart-item {
             display: flex;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--bg-secondary);
         }
 
         .cart-item-info {
@@ -626,11 +739,13 @@
         .cart-item-name {
             font-weight: 600;
             margin-bottom: 4px;
+            color: var(--text-primary);
         }
 
         .cart-item-price {
-            color: var(--accent);
-            font-weight: 700;
+            color: var(--accent-dark);
+            font-weight: 600;
+            font-size: 14px;
         }
 
         .modal-total {
@@ -638,33 +753,65 @@
             justify-content: space-between;
             padding: 16px 0;
             font-size: 18px;
-            font-weight: 800;
+            font-weight: 700;
+            border-top: 2px solid var(--accent-light);
+            margin-top: 8px;
         }
 
         .modal-btn {
             width: 100%;
             padding: 16px;
             border: none;
-            background: var(--gradient);
+            background: var(--accent);
             color: white;
             font-size: 16px;
-            font-weight: 700;
-            border-radius: 14px;
+            font-weight: 600;
+            border-radius: var(--radius-lg);
             cursor: pointer;
             margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn:hover {
+            background: var(--accent-hover);
         }
 
         .modal-btn.secondary {
-            background: #f0f0f0;
-            color: var(--tg-theme-text-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .modal-btn.secondary:hover {
+            background: var(--accent-light);
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- 
+    ====================================================
+    HEADER С ЛОГОТИПОМ
+    ====================================================
+    Инструкция по добавлению логотипа:
+    1. Создайте папку: webapp/static/img/
+    2. Поместите файл логотипа с именем: logo.png
+    3. Рекомендуемый размер: от 120x120 пикселей
+    4. Формат: PNG с прозрачным фоном
+    ==================================================== 
+    -->
     <header class="header">
-        <h1>🍽 Кафе Доставка</h1>
-        <p class="header-subtitle">Вкусно и быстро к вашему столу</p>
+        <!-- Логотип - замените src на путь к вашему файлу -->
+        <img 
+            src="img/logo.png" 
+            alt="Логотип кафе" 
+            class="header-logo"
+            onerror="this.style.display='none'; document.getElementById('logo-placeholder').style.display='flex';"
+        >
+        <!-- Placeholder если логотип не загружен -->
+        <div id="logo-placeholder" class="header-logo-placeholder" style="display: none;">
+            ☕
+        </div>
+        <h1>Кофейня Lilit</h1>
+        <p class="header-subtitle">Изысканный вкус каждый день</p>
     </header>
 
     <!-- Address Section -->
@@ -687,6 +834,7 @@
     <section class="menu-section" id="menu-container">
         <div class="loading">
             <div class="loading-spinner"></div>
+            <span>Загружаем меню...</span>
         </div>
     </section>
 
@@ -721,7 +869,7 @@
     <div class="modal-overlay" id="cart-modal">
         <div class="modal-content">
             <div class="modal-handle"></div>
-            <h2 class="modal-title">🛒 Ваш заказ</h2>
+            <h2 class="modal-title">Ваш заказ</h2>
             <div class="cart-items-list" id="cart-items-list">
                 <!-- Cart items -->
             </div>
@@ -730,10 +878,10 @@
                 <span id="modal-total">0₽</span>
             </div>
             <button class="modal-btn" onclick="submitOrder()">
-                ✅ Подтвердить заказ
+                Подтвердить заказ
             </button>
             <button class="modal-btn secondary" onclick="closeCart()">
-                Продолжить покупки
+                Продолжить выбор
             </button>
         </div>
     </div>
@@ -748,17 +896,10 @@
             tg.ready();
             tg.expand();
             
-            // Get user data
             if (tg.initDataUnsafe?.user) {
                 userId = tg.initDataUnsafe.user.id;
                 userData = tg.initDataUnsafe.user;
             }
-            
-            // Apply theme
-            document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#ffffff');
-            document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#1a1a2e');
-            document.documentElement.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color || '#7f8c8d');
-            document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color || '#e94560');
         }
 
         // Fallback for testing
@@ -826,7 +967,7 @@
                 console.error('Failed to load menu:', e);
                 document.getElementById('menu-container').innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-state-icon">😔</div>
+                        <div class="empty-state-icon">☕</div>
                         <div class="empty-state-text">Не удалось загрузить меню</div>
                     </div>
                 `;
@@ -862,7 +1003,7 @@
             const nav = document.getElementById('categories-nav');
             
             nav.innerHTML = `
-                <button class="category-tab active" data-category="all">🍽 Все</button>
+                <button class="category-tab active" data-category="all">Все</button>
                 ${categories.map(cat => `
                     <button class="category-tab" data-category="${cat.id}">
                         ${cat.emoji} ${cat.name}
@@ -886,7 +1027,7 @@
             if (!categoriesToRender || categoriesToRender.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-state-icon">🍽</div>
+                        <div class="empty-state-icon">☕</div>
                         <div class="empty-state-text">Меню пусто</div>
                     </div>
                 `;
@@ -909,13 +1050,27 @@
             const inCart = cart[item.id];
             const quantity = inCart ? inCart.quantity : 0;
 
-            const foodEmojis = ['🍕', '🍔', '🍝', '🍜', '🥗', '🍖', '🍳', '🥤', '☕', '🍰'];
-            const randomEmoji = foodEmojis[item.id % foodEmojis.length];
+            // Эмодзи для разных категорий
+            const categoryEmojis = {
+                1: ['🥐', '🍳', '🥞', '🧇'],  // Завтраки
+                2: ['🥗', '🍤', '🧀', '🥨'],  // Закуски
+                3: ['🥬', '🥒', '🍅', '🥕'],  // Салаты
+                4: ['🍝', '🍖', '🍲', '🥘'],  // Основные
+                5: ['☕', '🍵', '🥤', '🧃'],  // Напитки
+            };
+            
+            const emojis = categoryEmojis[item.category_id] || ['🍽'];
+            const randomEmoji = emojis[item.id % emojis.length];
+
+            // Если есть изображение - показываем его
+            const imageContent = item.image_url 
+                ? `<img src="${item.image_url}" alt="${item.name}" onerror="this.parentElement.innerHTML='${randomEmoji}'">`
+                : randomEmoji;
 
             return `
                 <div class="menu-item" data-id="${item.id}">
-                    ${item.is_new ? '<span class="item-new-badge">NEW</span>' : ''}
-                    <div class="item-image">${randomEmoji}</div>
+                    ${item.is_new ? '<span class="item-new-badge">Новинка</span>' : ''}
+                    <div class="item-image">${imageContent}</div>
                     <div class="item-content">
                         <div class="item-name">${item.name}</div>
                         <div class="item-description">${item.description || ''}</div>
@@ -962,9 +1117,8 @@
             }
 
             updateCartUI();
-            showToast(`${item.name} добавлен в корзину`);
+            showToast(`${item.name} добавлен`);
             
-            // Re-render the specific item
             const itemEl = document.querySelector(`.menu-item[data-id="${itemId}"]`);
             if (itemEl) {
                 itemEl.outerHTML = renderMenuItem(item);
@@ -1005,7 +1159,6 @@
                 footer.classList.remove('visible');
             }
 
-            // Show bonus section if total >= 500 and user has bonus
             const bonusSection = document.getElementById('bonus-section');
             if (total >= 500 && userBalance.bonus > 0) {
                 bonusSection.classList.add('visible');
@@ -1014,7 +1167,6 @@
                 bonusUsed = 0;
             }
 
-            // Update Main Button if available
             if (tg && count > 0) {
                 tg.MainButton.setText(`Заказать за ${total - bonusUsed}₽`);
                 tg.MainButton.show();
@@ -1031,7 +1183,6 @@
             const items = Object.values(cart);
             const total = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
             
-            // Max 50% of order
             const maxBonus = Math.min(Math.floor(total / 2), userBalance.bonus, requestedBonus);
             bonusUsed = maxBonus;
             
@@ -1108,15 +1259,13 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Clear cart
                     cart = {};
                     bonusUsed = 0;
                     updateCartUI();
                     closeCart();
                     
-                    showToast(`✅ Заказ #${data.order_id} создан!`);
+                    showToast(`Заказ #${data.order_id} принят!`);
 
-                    // Send data back to Telegram
                     if (tg) {
                         tg.sendData(JSON.stringify({
                             action: 'order_created',
@@ -1125,7 +1274,6 @@
                         }));
                     }
 
-                    // Reload user data to update balance
                     await loadUserData();
                     renderMenu();
                 } else {
@@ -1158,7 +1306,6 @@
             }, 2500);
         }
 
-        // Close modal on background click
         document.getElementById('cart-modal').addEventListener('click', (e) => {
             if (e.target.id === 'cart-modal') {
                 closeCart();

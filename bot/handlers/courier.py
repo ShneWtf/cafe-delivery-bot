@@ -8,10 +8,14 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 import os
 
-from ..database import (
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from database import (
     get_user, get_courier_orders, get_order, update_order_status, DIRECTOR_ID
 )
-from ..keyboards import (
+from keyboards import (
     get_courier_panel_keyboard, get_courier_order_keyboard
 )
 
@@ -233,7 +237,7 @@ async def courier_delivered_callback(callback: CallbackQuery, bot: Bot):
     update_order_status(order_id, 'delivered')
     
     # Add cashback to user (5% of order)
-    from ..database import add_user_cashback
+    from database import add_user_cashback
     cashback = int(order['total_price'] * 0.05)
     add_user_cashback(order['user_id'], cashback)
     
