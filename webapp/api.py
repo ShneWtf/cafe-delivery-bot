@@ -13,7 +13,9 @@ from typing import Optional, List, Dict, Any
 from pathlib import Path
 
 # Add bot directory to path for database access
-sys.path.insert(0, str(Path(__file__).parent.parent / "bot"))
+bot_path = Path(__file__).parent.parent / "bot"
+if str(bot_path) not in sys.path:
+    sys.path.insert(0, str(bot_path))
 
 from fastapi import FastAPI, HTTPException, Request, Query, Depends
 from fastapi.staticfiles import StaticFiles
