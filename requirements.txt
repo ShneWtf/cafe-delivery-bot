@@ -1,0 +1,18 @@
+# Telegram Bot
+aiogram>=3.3.0,<4.0.0
+
+# Web Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# HTTP client (for aiogram)
+aiohttp>=3.9.0
+
+# Data validation
+pydantic>=2.5.0
+
+# Optional: Payment processing
+# yookassa>=3.0.0
