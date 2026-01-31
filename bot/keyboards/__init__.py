@@ -212,10 +212,11 @@ def get_dish_edit_keyboard(item_id: int) -> InlineKeyboardMarkup:
     builder.button(text="📝 Изменить название", callback_data=f"director:edit_name:{item_id}")
     builder.button(text="💰 Изменить цену", callback_data=f"director:edit_price:{item_id}")
     builder.button(text="📄 Изменить описание", callback_data=f"director:edit_desc:{item_id}")
+    builder.button(text="🖼 Изменить фото", callback_data=f"director:edit_image:{item_id}")
     builder.button(text="🔄 Вкл/Выкл доступность", callback_data=f"director:toggle_avail:{item_id}")
     builder.button(text="🔙 Назад", callback_data="director:edit_dish")
     
-    builder.adjust(2, 2, 1)
+    builder.adjust(2, 2, 2)
     return builder.as_markup()
 
 

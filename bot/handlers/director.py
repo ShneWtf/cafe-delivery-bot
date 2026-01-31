@@ -43,6 +43,7 @@ class DirectorStates(StatesGroup):
     waiting_edit_name = State()
     waiting_edit_price = State()
     waiting_edit_description = State()
+    waiting_edit_image = State()
 
 
 def is_director(user_id: int) -> bool:
@@ -773,6 +774,73 @@ async def director_toggle_avail_callback(callback: CallbackQuery):
         f"Выберите что изменить:",
         parse_mode="HTML",
         reply_markup=get_dish_edit_keyboard(item_id)
+    )
+
+
+# ============ EDIT IMAGE ============
+
+@router.callback_query(F.data.startswith("director:edit_image:"))
+async def director_edit_image_callback(callback: CallbackQuery, state: FSMContext):
+    """Start editing dish image"""
+    if not is_director(callback.from_user.id):
+        await callback.answer("⛔ Нет доступа", show_alert=True)
+        return
+    
+    item_id = int(callback.data.split(":")[2])
+    await state.update_data(editing_dish_id=item_id)
+    await state.set_state(DirectorStates.waiting_edit_image)
+    
+    await callback.message.edit_text(
+        "🖼 <b>Изменение фото блюда</b>\n\n"
+        "Отправьте ссылку на изображение (URL).\n\n"
+        "💡 <b>Как получить ссылку:</b>\n"
+        "1. Загрузите фото на <a href='https://imgbb.com/'>imgbb.com</a>\n"
+        "2. Скопируйте «Direct link» (прямую ссылку)\n"
+        "3. Отправьте эту ссылку сюда\n\n"
+        "Или отправьте <code>-</code> чтобы убрать фото.",
+        parse_mode="HTML",
+        disable_web_page_preview=True
+    )
+    await callback.answer()
+
+
+@router.message(DirectorStates.waiting_edit_image)
+async def director_edit_image_handler(message: Message, state: FSMContext):
+    """Handle new dish image URL"""
+    if not is_director(message.from_user.id):
+        return
+    
+    data = await state.get_data()
+    item_id = data['editing_dish_id']
+    
+    # Если отправили "-" — убираем фото
+    if message.text.strip() == "-":
+        update_menu_item(item_id, image_url=None)
+        await state.clear()
+        await message.answer(
+            "✅ Фото удалено!",
+            parse_mode="HTML",
+            reply_markup=get_director_menu_management_keyboard()
+        )
+        return
+    
+    # Проверяем что это похоже на URL
+    image_url = message.text.strip()
+    if not (image_url.startswith("http://") or image_url.startswith("https://")):
+        await message.answer(
+            "❌ Это не похоже на ссылку. Отправьте URL, начинающийся с http:// или https://",
+            parse_mode="HTML"
+        )
+        return
+    
+    update_menu_item(item_id, image_url=image_url)
+    await state.clear()
+    
+    await message.answer(
+        "✅ Фото обновлено!\n\n"
+        "Изменение сразу отобразится в Mini App.",
+        parse_mode="HTML",
+        reply_markup=get_director_menu_management_keyboard()
     )
 
 
