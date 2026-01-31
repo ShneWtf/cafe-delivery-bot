@@ -10,12 +10,16 @@ import sys
 import threading
 from pathlib import Path
 
-# Add bot directory to path
-sys.path.insert(0, str(Path(__file__).parent / "bot"))
-sys.path.insert(0, str(Path(__file__).parent / "webapp"))
+# Get the directory where this script is located
+BASE_DIR = Path(__file__).parent.resolve()
+
+# Add directories to path
+sys.path.insert(0, str(BASE_DIR))
+sys.path.insert(0, str(BASE_DIR / "bot"))
+sys.path.insert(0, str(BASE_DIR / "webapp"))
 
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(BASE_DIR / ".env")
 
 # Configure logging
 logging.basicConfig(
@@ -28,7 +32,8 @@ logger = logging.getLogger(__name__)
 def run_api_server():
     """Run FastAPI server in a separate thread"""
     import uvicorn
-    from webapp.api import app
+    # Direct import since bot/ is in path
+    from api import app
     
     port = int(os.getenv("PORT", 8000))
     host = os.getenv("HOST", "0.0.0.0")
@@ -43,9 +48,9 @@ async def run_bot():
     from aiogram.enums import ParseMode
     from aiogram.client.default import DefaultBotProperties
     
-    # Import after path is set
-    from bot.handlers import user_router, admin_router, director_router, courier_router
-    from bot.database import init_db, DIRECTOR_ID
+    # Direct imports since bot/ is in path
+    from handlers import user_router, admin_router, director_router, courier_router
+    from database import init_db, DIRECTOR_ID
     
     bot_token = os.getenv("BOT_TOKEN")
     if not bot_token:
