@@ -11,7 +11,7 @@ from contextlib import contextmanager
 import os
 
 DATABASE_PATH = os.path.join(os.path.dirname(__file__), "cafe_bot.db")
-DIRECTOR_ID = 7592151419
+DIRECTOR_ID = int(os.getenv("DIRECTOR_ID", "7559519281"))
 
 
 @contextmanager
